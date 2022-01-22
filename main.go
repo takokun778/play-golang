@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"play/array"
+	"play/timer"
 )
 
 func main() {
@@ -33,4 +34,6 @@ func main() {
 	dst := array.Filter(src, condisions)
 	fmt.Println(dst)
 	fmt.Println(src)
+
+	timer.Sleep(10)
 }
