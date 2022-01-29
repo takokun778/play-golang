@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-
-	"play/array"
-	"play/timer"
+	"play/parallel"
+	"sync"
 )
 
 func main() {
@@ -28,12 +27,42 @@ func main() {
 	// fmt.Println(src)
 
 	// 配列を条件でフィルタリングする
-	condisions := func(n int) bool {
-		return n%2 == 0
-	}
-	dst := array.Filter(src, condisions)
-	fmt.Println(dst)
-	fmt.Println(src)
+	// condisions := func(n int) bool {
+	// 	return n%2 == 0
+	// }
+	// dst := array.Filter(src, condisions)
+	// fmt.Println(dst)
+	// fmt.Println(src)
 
-	timer.Sleep(10)
+	// timer.Sleep(10)
+
+	type Result struct {
+		Number int
+		Error  error
+	}
+
+	results := make([]Result, 0)
+
+	wg := new(sync.WaitGroup)
+	mu := new(sync.Mutex)
+
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func(wg *sync.WaitGroup, mu *sync.Mutex) {
+			defer wg.Done()
+			defer mu.Unlock()
+			result, err := parallel.AsyncFunc()
+			mu.Lock()
+			results = append(results, Result{
+				Number: result,
+				Error:  err,
+			})
+		}(wg, mu)
+	}
+
+	wg.Wait()
+
+	for _, result := range results {
+		fmt.Println(result)
+	}
 }

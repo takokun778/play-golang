@@ -9,7 +9,7 @@ import (
 func Sleep(n int) {
 	timer := time.NewTimer(time.Duration(n) * time.Second)
 
-	fmt.Printf(strconv.Itoa(n) + " second wait")
+	fmt.Println(strconv.Itoa(n) + " second wait")
 
 	<-timer.C
 
