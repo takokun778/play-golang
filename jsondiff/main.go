@@ -22,6 +22,10 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
+	if err := os.Mkdir(fmt.Sprintf("./%s", dstDir), os.ModePerm); err != nil {
+		log.Fatalln(err.Error())
+	}
+
 	for _, dir := range dirs {
 		if err := os.Mkdir(fmt.Sprintf("./%s/%s", dstDir, dir), os.ModePerm); err != nil {
 			log.Fatalln(err.Error())
@@ -70,7 +74,7 @@ func ListFile(dir string) ([]string, error) {
 		return nil, err
 	}
 
-	filenames := make([]string, 0)
+	filenames := make([]string, 0, len(files))
 
 	for _, f := range files {
 		if f.IsDir() {
@@ -93,7 +97,7 @@ func ListDir(dir string) ([]string, error) {
 		return nil, err
 	}
 
-	dirs := make([]string, 0)
+	dirs := make([]string, 0, len(files))
 
 	for _, f := range files {
 		if f.Name() == srcDir {
